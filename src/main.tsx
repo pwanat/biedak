@@ -1,8 +1,6 @@
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider } from '@tanstack/react-router'
-import { FontProvider } from './context/font-context'
-import { ThemeProvider } from './context/theme-context'
 import './index.css'
 import { createRouter } from './router'
 
