@@ -1,6 +1,7 @@
 import globals from 'globals'
 import js from '@eslint/js'
 import pluginQuery from '@tanstack/eslint-plugin-query'
+import pluginRouter from '@tanstack/eslint-plugin-router'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
@@ -21,6 +22,7 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      '@tanstack/router': pluginRouter,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -42,6 +44,7 @@ export default tseslint.config(
           ignoreRestSiblings: true,
         },
       ],
+      ...pluginRouter.configs['flat/recommended'].rules,
     },
   }
 )
