@@ -27,7 +27,8 @@ export const createServer = async (
   app.use('/trpc', trpcMiddleWare)
 
   if (!isProd) {
-    const vite = await import('vite')
+    const vite = await import('vite');
+    
     const viteServer = await vite.createServer({
       root,
       logLevel: isTest ? 'error' : 'info',
