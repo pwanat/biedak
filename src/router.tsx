@@ -5,6 +5,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
+import { ClerkProvider } from '@clerk/clerk-react'
 import { createTRPCClient, httpBatchLink } from '@trpc/client'
 import { createTRPCOptionsProxy } from '@trpc/tanstack-react-query'
 import { toast } from 'sonner'
@@ -15,6 +16,12 @@ import { routeTree } from './routeTree.gen'
 import { AppRouter } from './server/trpc'
 import { useAuthStore } from './stores/authStore'
 import { handleServerError } from './utils/handle-server-error'
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error('Missing Clerk Publishable Key in environment variables')
+}
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -97,11 +104,20 @@ const router = createTanStackRouter({
   ),
   Wrap: function WrapComponent({ children }) {
     return (
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
-          <FontProvider>{children}</FontProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <ClerkProvider
+        publishableKey={PUBLISHABLE_KEY}
+        afterSignOutUrl='/clerk/sign-in'
+        signInUrl='/clerk/sign-in'
+        signUpUrl='/clerk/sign-up'
+        signInFallbackRedirectUrl='/clerk/user-management'
+        signUpFallbackRedirectUrl='/clerk/user-management'
+      >
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
+            <FontProvider>{children}</FontProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </ClerkProvider>
     )
   },
 })

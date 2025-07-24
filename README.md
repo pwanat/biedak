@@ -2,7 +2,21 @@
 
 Biedak UI crafted with Shadcn and Vite. Built with responsiveness and accessibility in mind.
 
+## TODO
+
+[x] - Add Clerk
+[x] - Figure out routing
+[ ] - Add Drizzle + DB
+[ ] - Add logo
+[ ] - Add categories
+[ ] - Add tags
+[ ] - Analytics (posthog)
+[ ] - Ratelimiting (upstash)
+[ ] - Add Sentry
+
 ## Tech Stack
+
+**NODE v20.19.4**
 
 **UI:** [ShadcnUI](https://ui.shadcn.com) (TailwindCSS + RadixUI)
 
