@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query'
+import { trpc } from '@/router'
 import { Main } from '@/components/layout/main'
 import { columns } from './components/users-columns'
 import { UsersDialogs } from './components/users-dialogs'
@@ -10,6 +12,11 @@ import { users } from './data/users'
 export default function Expenses() {
   // Parse user list
   const userList = userListSchema.parse(users)
+
+  const postsQuery = useQuery(trpc.posts.queryOptions())
+
+  const posts = postsQuery.data || []
+  console.log('🚀 ~ Expenses ~ posts:', posts)
 
   return (
     <UsersProvider>
