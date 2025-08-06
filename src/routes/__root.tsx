@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  redirect,
 } from "@tanstack/react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
@@ -15,7 +16,7 @@ import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
 import { createServerFn } from "@tanstack/react-start";
-import { getAuth } from "@clerk/tanstack-react-start/server";
+import { clerkClient, getAuth } from "@clerk/tanstack-react-start/server";
 import { getWebRequest } from "@tanstack/react-start/server";
 import {
   ClerkProvider,
@@ -25,24 +26,35 @@ import {
   UserButton,
 } from "@clerk/tanstack-react-start";
 
-const fetchClerkAuth = createServerFn({ method: "GET" }).handler(async () => {
-  const { userId } = await getAuth(getWebRequest()!);
+const authStateFn = createServerFn({ method: "GET" }).handler(async () => {
 
-  return {
-    userId,
-  };
+  console.info("Fetching auth state...");
+  // Use `getAuth()` to retrieve the user's ID
+  const { userId } = await getAuth(getWebRequest());
+
+  // Protect the server function by checking if the user is signed in
+  if (!userId) {
+    // This might error if you're redirecting to a path that doesn't exist yet
+    // You can create a sign-in route to handle this
+    // See https://clerk.com/docs/references/tanstack-react-start/custom-sign-in-or-up-page
+    throw redirect({
+      to: "/",
+    });
+  }
+
+  // Get the user's full `Backend User` object
+  const user = userId ? await clerkClient().users.getUser(userId) : null;
+
+  return { userId, firstName: user?.firstName };
 });
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
-  beforeLoad: async () => {
-    const { userId } = await fetchClerkAuth();
-
-    return {
-      userId,
-    };
-  },
+  // beforeLoad: () => authStateFn(),
+  // loader: async ({ context }) => {
+  //   return { userId: context.userId, firstName: context.firstName };
+  // },
   head: () => ({
     meta: [
       {

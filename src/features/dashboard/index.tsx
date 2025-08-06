@@ -1,5 +1,5 @@
 import { useClerk, useUser } from "@clerk/tanstack-react-start";
-
+import { Link } from "@tanstack/react-router";
 
 export default function Dashboard() {
   const { user, isLoaded } = useUser();
@@ -19,6 +19,12 @@ export default function Dashboard() {
         >
           Logout
         </button>
+        <Link
+          to="/users"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        >
+          Users
+        </Link>
       </div>
 
       {user && (
