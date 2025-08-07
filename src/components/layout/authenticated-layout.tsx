@@ -23,7 +23,7 @@ export function AuthenticatedLayout({ children }: Props) {
     <>
       <SignedIn>
         {/* <SearchProvider> */}
-        {/* <SidebarProvider defaultOpen> */}
+        <SidebarProvider defaultOpen>
           {/* <SidebarProvider defaultOpen={defaultOpen}> */}
           {/* <SkipToMain /> */}
           <AppSidebar />
@@ -42,7 +42,7 @@ export function AuthenticatedLayout({ children }: Props) {
             {/* <TopBar /> */}
             {children ? children : <Outlet />}
           </div>
-        {/* </SidebarProvider> */}
+        </SidebarProvider>
         {/* </SearchProvider> */}
       </SignedIn>
       <SignedOut>
