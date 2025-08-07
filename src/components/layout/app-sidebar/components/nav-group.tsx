@@ -26,7 +26,7 @@ import {
   SidebarMenuSubItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { NavCollapsible, NavItem, NavLink, type NavGroup } from './types'
+import { NavCollapsible, NavItem, NavLink, type NavGroup } from '../../types'
 
 export function NavGroup({ title, items }: NavGroup) {
   const { state, isMobile } = useSidebar()

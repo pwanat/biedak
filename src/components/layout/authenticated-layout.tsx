@@ -1,4 +1,4 @@
-// import Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 import { Outlet } from '@tanstack/react-router'
 import {
   RedirectToSignIn,
@@ -18,13 +18,13 @@ interface Props {
 }
 
 export function AuthenticatedLayout({ children }: Props) {
-  // const defaultOpen = Cookies.get('sidebar_state') !== 'false'
+  const defaultOpen = Cookies.get('sidebar_state') !== 'false'
+
   return (
     <>
       <SignedIn>
         <SearchProvider>
-          <SidebarProvider defaultOpen>
-            {/* <SidebarProvider defaultOpen={defaultOpen}> */}
+          <SidebarProvider defaultOpen={defaultOpen}>
             {/* <SkipToMain /> */}
             <AppSidebar />
             <div

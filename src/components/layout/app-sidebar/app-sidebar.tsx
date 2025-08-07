@@ -1,3 +1,4 @@
+import { BiedakLogo } from '~/assets/biedak-logo'
 import {
   Sidebar,
   SidebarContent,
@@ -13,9 +14,10 @@ import { sidebarData } from './data/sidebar-data'
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' variant='floating' {...props}>
-      {/* <SidebarHeader> */}
+      <SidebarHeader>
+        <BiedakLogo className='p-2' />
         {/* <TeamSwitcher teams={sidebarData.teams} /> */}
-      {/* </SidebarHeader> */}
+      </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (
           <NavGroup key={props.title} {...props} />
