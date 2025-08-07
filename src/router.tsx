@@ -6,6 +6,7 @@ import { routeTree } from "./routeTree.gen";
 import NotFoundError from "./features/errors/not-found-error";
 import GeneralError from "./features/errors/general-error";
 import { queryClient } from "./utils/query-client";
+import { DefaultCatchBoundary } from "./features/errors/default-catch-boundary";
 
 // NOTE: Most of the integration code found here is experimental and will
 // definitely end up in a more streamlined API in the future. This is just
@@ -17,7 +18,8 @@ export function createRouter() {
       routeTree,
       context: { queryClient },
       defaultPreload: "intent",
-      defaultErrorComponent: GeneralError,
+      // defaultErrorComponent: GeneralError,
+      defaultErrorComponent: DefaultCatchBoundary,
       defaultNotFoundComponent: NotFoundError,
       defaultPendingComponent: () => (
         <div className={`p-2 text-2xl`}>
