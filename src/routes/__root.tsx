@@ -25,9 +25,9 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/tanstack-react-start";
+import GeneralError from "~/features/errors/general-error";
 
 const authStateFn = createServerFn({ method: "GET" }).handler(async () => {
-
   console.info("Fetching auth state...");
   // Use `getAuth()` to retrieve the user's ID
   const { userId } = await getAuth(getWebRequest());
@@ -96,11 +96,10 @@ export const Route = createRootRouteWithContext<{
   errorComponent: (props) => {
     return (
       <RootDocument>
-        <DefaultCatchBoundary {...props} />
+        <GeneralError />
       </RootDocument>
     );
   },
-  notFoundComponent: () => <NotFound />,
   component: RootComponent,
 });
 

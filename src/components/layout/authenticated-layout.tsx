@@ -2,7 +2,7 @@
 import { RedirectToSignIn, SignedIn, SignedOut } from '@clerk/tanstack-react-start'
 import { Outlet } from '@tanstack/react-router'
 
-// import { cn } from '@/lib/utils'
+// import { cn } from '~/utils/cn'
 // import { SearchProvider } from '@/context/search-context'
 // import { SidebarProvider } from '@/components/ui/sidebar'
 // import { AppSidebar } from '@/components/layout/app-sidebar'
