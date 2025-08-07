@@ -5,56 +5,19 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
-  redirect,
 } from "@tanstack/react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import * as React from "react";
 import type { QueryClient } from "@tanstack/react-query";
-import { DefaultCatchBoundary } from "~/components/DefaultCatchBoundary";
-import { NotFound } from "~/components/NotFound";
 import appCss from "~/styles/app.css?url";
 import { seo } from "~/utils/seo";
-import { createServerFn } from "@tanstack/react-start";
-import { clerkClient, getAuth } from "@clerk/tanstack-react-start/server";
-import { getWebRequest } from "@tanstack/react-start/server";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/tanstack-react-start";
+import { ClerkProvider } from "@clerk/tanstack-react-start";
 import GeneralError from "~/features/errors/general-error";
-
-const authStateFn = createServerFn({ method: "GET" }).handler(async () => {
-  console.info("Fetching auth state...");
-  // Use `getAuth()` to retrieve the user's ID
-  const { userId } = await getAuth(getWebRequest());
-
-  // Protect the server function by checking if the user is signed in
-  if (!userId) {
-    // This might error if you're redirecting to a path that doesn't exist yet
-    // You can create a sign-in route to handle this
-    // See https://clerk.com/docs/references/tanstack-react-start/custom-sign-in-or-up-page
-    throw redirect({
-      to: "/",
-    });
-  }
-
-  // Get the user's full `Backend User` object
-  const user = userId ? await clerkClient().users.getUser(userId) : null;
-
-  return { userId, firstName: user?.firstName };
-});
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
-  // beforeLoad: () => authStateFn(),
-  // loader: async ({ context }) => {
-  //   return { userId: context.userId, firstName: context.firstName };
-  // },
   head: () => ({
     meta: [
       {
@@ -65,13 +28,13 @@ export const Route = createRootRouteWithContext<{
         content: "width=device-width, initial-scale=1",
       },
       ...seo({
-        title:
-          "TanStack Start | Type-Safe, Client-First, Full-Stack React Framework",
-        description: `TanStack Start is a type-safe, client-first, full-stack React framework. `,
+        title: "Biedak | Od zera do klasy średniej niższej",
+        description: `Biedak to portal dla biedaków`,
       }),
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      // TODO: zrobić favicony
       {
         rel: "apple-touch-icon",
         sizes: "180x180",
@@ -93,13 +56,6 @@ export const Route = createRootRouteWithContext<{
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
-  errorComponent: (props) => {
-    return (
-      <RootDocument>
-        <GeneralError />
-      </RootDocument>
-    );
-  },
   component: RootComponent,
 });
 
