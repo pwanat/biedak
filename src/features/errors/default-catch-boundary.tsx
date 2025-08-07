@@ -35,7 +35,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
               className='mt-4 rounded-lg bg-destructive/10 p-4 text-destructive max-w-2xl'
               role='alert'
             >
-              <code>{error.message}</code>
+              <code className='wrap-break-word'>{error.message}</code>
             </pre>
 
             {/* Stack trace - only in development */}

@@ -23,7 +23,7 @@ export function BiedakLogo(props: SVGProps<SVGSVGElement>) {
   }
 
   return (
-    <svg viewBox='0 0 370.17 82.579' className={cn('max-w-[256px]', className)} {...rest}>
+    <svg viewBox='0 0 370.17 82.579' className={cn('max-w-[256px] max-h-[48px]', className)} {...rest}>
       <g
         xmlns='http://www.w3.org/2000/svg'
         fill='currentColor'

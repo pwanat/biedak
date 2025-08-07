@@ -1,4 +1,4 @@
-import { BiedakLogo } from '~/assets/biedak-logo'
+import { BiedakLogo } from '~/components/layout/app-sidebar/components/biedak-logo'
 import {
   Sidebar,
   SidebarContent,
@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/sidebar'
 import { NavGroup } from './components/nav-group'
 import { NavUser } from './components/nav-user'
-import { TeamSwitcher } from './components/team-switcher'
+// import { TeamSwitcher } from './components/team-switcher'
 import { sidebarData } from './data/sidebar-data'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
