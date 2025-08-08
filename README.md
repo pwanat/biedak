@@ -6,9 +6,8 @@ Biedak UI crafted with Shadcn and Vite. Built with responsiveness and accessibil
 
 [x] - Add Clerk
 [x] - Figure out routing
-[ ] - Try Vite 7
 [ ] - Add Drizzle + DB
-[ ] - Add logo
+[x] - Add logo
 [ ] - Add categories
 [ ] - Add tags
 [ ] - Add expenses
