@@ -6,7 +6,6 @@ import { eq } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { expensesTable } from '~/server/db/schema'
 import { getClerkUserId } from '~/utils/clerk'
-import type { User } from '../../utils/users'
 
 export const ServerRoute = createServerFileRoute('/api/expenses').methods({
   GET: async ({ request, params }) => {
@@ -17,7 +16,7 @@ export const ServerRoute = createServerFileRoute('/api/expenses').methods({
       }
 
       console.log('📝 Fetching expenses for user:', userId)
-      
+
       // Fetch expenses from the database
       const expenses = await db
         .select()

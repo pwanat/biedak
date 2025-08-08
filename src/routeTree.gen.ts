@@ -22,6 +22,7 @@ import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedExpensesIndexRouteImport } from './routes/_authenticated/expenses/index'
 import { ServerRoute as ApiUsersServerRouteImport } from './routes/api/users'
 import { ServerRoute as ApiExpensesServerRouteImport } from './routes/api/expenses'
+import { ServerRoute as ApiCategoriesServerRouteImport } from './routes/api/categories'
 import { ServerRoute as ApiUsersIdServerRouteImport } from './routes/api/users.$id'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -79,6 +80,11 @@ const ApiUsersServerRoute = ApiUsersServerRouteImport.update({
 const ApiExpensesServerRoute = ApiExpensesServerRouteImport.update({
   id: '/api/expenses',
   path: '/api/expenses',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const ApiCategoriesServerRoute = ApiCategoriesServerRouteImport.update({
+  id: '/api/categories',
+  path: '/api/categories',
   getParentRoute: () => rootServerRouteImport,
 } as any)
 const ApiUsersIdServerRoute = ApiUsersIdServerRouteImport.update({
@@ -154,30 +160,43 @@ export interface RootRouteChildren {
   errors503Route: typeof errors503Route
 }
 export interface FileServerRoutesByFullPath {
+  '/api/categories': typeof ApiCategoriesServerRoute
   '/api/expenses': typeof ApiExpensesServerRoute
   '/api/users': typeof ApiUsersServerRouteWithChildren
   '/api/users/$id': typeof ApiUsersIdServerRoute
 }
 export interface FileServerRoutesByTo {
+  '/api/categories': typeof ApiCategoriesServerRoute
   '/api/expenses': typeof ApiExpensesServerRoute
   '/api/users': typeof ApiUsersServerRouteWithChildren
   '/api/users/$id': typeof ApiUsersIdServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
+  '/api/categories': typeof ApiCategoriesServerRoute
   '/api/expenses': typeof ApiExpensesServerRoute
   '/api/users': typeof ApiUsersServerRouteWithChildren
   '/api/users/$id': typeof ApiUsersIdServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/expenses' | '/api/users' | '/api/users/$id'
+  fullPaths:
+    | '/api/categories'
+    | '/api/expenses'
+    | '/api/users'
+    | '/api/users/$id'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/expenses' | '/api/users' | '/api/users/$id'
-  id: '__root__' | '/api/expenses' | '/api/users' | '/api/users/$id'
+  to: '/api/categories' | '/api/expenses' | '/api/users' | '/api/users/$id'
+  id:
+    | '__root__'
+    | '/api/categories'
+    | '/api/expenses'
+    | '/api/users'
+    | '/api/users/$id'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
+  ApiCategoriesServerRoute: typeof ApiCategoriesServerRoute
   ApiExpensesServerRoute: typeof ApiExpensesServerRoute
   ApiUsersServerRoute: typeof ApiUsersServerRouteWithChildren
 }
@@ -265,6 +284,13 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof ApiExpensesServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
+    '/api/categories': {
+      id: '/api/categories'
+      path: '/api/categories'
+      fullPath: '/api/categories'
+      preLoaderRoute: typeof ApiCategoriesServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
     '/api/users/$id': {
       id: '/api/users/$id'
       path: '/$id'
@@ -314,6 +340,7 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
+  ApiCategoriesServerRoute: ApiCategoriesServerRoute,
   ApiExpensesServerRoute: ApiExpensesServerRoute,
   ApiUsersServerRoute: ApiUsersServerRouteWithChildren,
 }

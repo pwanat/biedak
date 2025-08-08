@@ -1,11 +1,15 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { DatePicker } from '~/components/date-picker'
 import { NumericInput } from '~/components/numeric-input'
 import { Textarea } from '~/components/ui/textarea'
-import { postExpenseMutationOptions, postExpenseQueryOptions } from '~/queries/expenses'
+import { categoriesQueryOptions } from '~/queries/categories'
+import {
+  postExpenseMutationOptions,
+  postExpenseQueryOptions,
+} from '~/queries/expenses'
 import { ExpenseSelect } from '~/server/db/schema'
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { Button } from '@/components/ui/button'
@@ -53,12 +57,15 @@ export type ExpenseForm = z.infer<typeof formSchema>
 export function ExpenseMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   const isUpdate = !!currentRow
 
+  const { data: categories } = useSuspenseQuery(categoriesQueryOptions())
+  console.log("🚀 ~ ExpenseMutateDrawer ~ categories:", categories)
   const { mutate: postExpense } = useMutation(postExpenseMutationOptions())
 
   const form = useForm<ExpenseForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: currentRow?.name || '',
+      category: currentRow?.category || '',
       description: currentRow?.description || '',
       amount: currentRow?.amount || 0,
       occurredOn: currentRow?.occurredOn || new Date(),
