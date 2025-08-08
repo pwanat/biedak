@@ -10,6 +10,7 @@ import {
 import { ClerkProvider } from '@clerk/tanstack-react-start'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { Toaster } from '~/components/ui/sonner'
 import { FontProvider } from '~/context/font-context'
 import { ThemeProvider } from '~/context/theme-context'
 import appCss from '~/styles/app.css?url'
@@ -44,7 +45,7 @@ export const Route = createRootRouteWithContext<{
         href: '/favicon/favicon-96x96.png',
         sizes: '96x96',
       },
-      { rel: 'icon', type: 'image/svg+xml', href: '/favicon/favicon.svg' },      
+      { rel: 'icon', type: 'image/svg+xml', href: '/favicon/favicon.svg' },
       { rel: 'shortcut icon', href: '/favicon/favicon.ico' },
       {
         rel: 'apple-touch-icon',
@@ -64,6 +65,7 @@ function RootComponent() {
         <FontProvider>
           <RootDocument>
             <Outlet />
+            <Toaster />
           </RootDocument>
         </FontProvider>
       </ThemeProvider>

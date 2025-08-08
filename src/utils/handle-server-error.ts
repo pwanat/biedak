@@ -1,11 +1,9 @@
 import { AxiosError } from 'axios'
 import { toast } from 'sonner'
 
-export function handleServerError(error: unknown) {
+export function handleServerError(error: AxiosError) {
   // eslint-disable-next-line no-console
-  console.log(error)
-
-  let errMsg = 'Something went wrong!'
+  console.log('in handleServerError', error)
 
   if (
     error &&
@@ -13,12 +11,11 @@ export function handleServerError(error: unknown) {
     'status' in error &&
     Number(error.status) === 204
   ) {
-    errMsg = 'Content not found.'
+    toast.error('Content not found.')
+    return
   }
 
-  if (error instanceof AxiosError) {
-    errMsg = error.response?.data.title
-  }
-
-  toast.error(errMsg)
+  toast.error(
+    error?.message || 'An error occurred while processing your request.'
+  )
 }

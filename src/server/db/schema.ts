@@ -4,11 +4,15 @@ import { sql } from 'drizzle-orm'
 import {
   index,
   integer,
+  pgEnum,
+  pgTable,
   pgTableCreator,
   serial,
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core'
+import { createInsertSchema, createUpdateSchema } from 'drizzle-zod';
+import z from 'zod';
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -18,14 +22,19 @@ import {
  */
 export const createTable = pgTableCreator((name) => `biedak_${name}`)
 
-export const expenses = createTable(
+export const currencyEnum = pgEnum('currency', ['PLN']);
+export const statusEnum = pgEnum('status', ['pending', 'done', 'rejected']);
+
+export const expensesTable = createTable(
   'expense',
   {
-    // id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
-    id: serial('id').primaryKey(),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
     userId: varchar('user_id', { length: 256 }).notNull(),
-    title: varchar('title', { length: 256 }).notNull(),
+    name: varchar('name', { length: 256 }).notNull(),
     description: varchar('description', { length: 1024 }),
+    amount: integer('amount').notNull(),
+    currency: currencyEnum().notNull(),
+    status: statusEnum().notNull(),
     occurredOn: timestamp('occurred_on', { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -36,5 +45,20 @@ export const expenses = createTable(
       () => new Date()
     ),
   },
-  (table) => [{ titleIndex: index('title_idx').on(table.title) }]
+  (table) => [{ nameIndex: index('name_idx').on(table.name) }, { userIndex: index('user_idx').on(table.userId) }]
 )
+
+export const expenseSelectSchema = createInsertSchema(expensesTable, {});
+export type ExpenseSelect = z.infer<typeof expenseSelectSchema>;
+
+export const expenseInsertSchema = createInsertSchema(expensesTable, {
+  id: false, // id is auto-generated
+  createdAt: false, // createdAt is auto-generated
+  updatedAt: false, // updatedAt is auto-generated
+});
+
+export const expenseUpdateSchema = createUpdateSchema(expensesTable, {
+  id: false, // id is not updated
+  createdAt: false, // createdAt is not updated
+  updatedAt: true, // updatedAt is updated on every update
+});

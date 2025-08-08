@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useTasks } from '../context/tasks-context'
 import { labels } from '../data/data'
-import { taskSchema } from '../data/schema'
+import { expenseSelectSchema } from '~/server/db/schema'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -26,8 +26,10 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const task = taskSchema.parse(row.original)
+  // const task = expenseSelectSchema.parse(row.original)
+  // console.log("🚀 ~ DataTableRowActions ~ task:", task)
 
+  const task = {};
   const { setOpen, setCurrentRow } = useTasks()
 
   return (
@@ -56,7 +58,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.label}>
+            <DropdownMenuRadioGroup value={task.name}>
               {labels.map((label) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}

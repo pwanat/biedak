@@ -14,6 +14,7 @@ export const getClerkUserId = async (request: Request) => {
     referrer: request.referrer,
     referrerPolicy: request.referrerPolicy,
     signal: request.signal,
+    duplex: 'half',
   });
 
   const { userId } = await getAuth(clerkRequest);
