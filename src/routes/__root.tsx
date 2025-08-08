@@ -3,7 +3,6 @@ import * as React from 'react'
 import type { QueryClient } from '@tanstack/react-query'
 import {
   HeadContent,
-  Link,
   Outlet,
   Scripts,
   createRootRouteWithContext,

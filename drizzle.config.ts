@@ -9,5 +9,5 @@ export default {
   dbCredentials: {
     url: DB_URL,
   },
-  tablesFilter: ["fixe_*"],
+  tablesFilter: ["biedak_*"],
 } satisfies Config;

@@ -1,4 +1,4 @@
-import globals from 'globals'
+
 import js from '@eslint/js'
 import pluginQuery from '@tanstack/eslint-plugin-query'
 import pluginRouter from '@tanstack/eslint-plugin-router'
@@ -18,7 +18,6 @@ export default tseslint.config(
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
-      globals: globals.browser,
     },
     plugins: {
       'react-hooks': reactHooks,

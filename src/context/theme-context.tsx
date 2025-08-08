@@ -27,7 +27,7 @@ const getThemeFromStorage = (key: string, fallback: Theme): Theme => {
   try {
     const stored = localStorage.getItem(key) as Theme
     return stored || fallback
-  } catch (e) {
+  } catch (_e) {
     return fallback
   }
 }
