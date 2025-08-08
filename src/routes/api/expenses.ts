@@ -2,6 +2,7 @@ import axios from 'axios'
 import { clerkClient, getAuth } from '@clerk/tanstack-react-start/server'
 import { json } from '@tanstack/react-start'
 import { createServerFileRoute } from '@tanstack/react-start/server'
+import { eq } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { expensesTable } from '~/server/db/schema'
 import { getClerkUserId } from '~/utils/clerk'
@@ -9,15 +10,26 @@ import type { User } from '../../utils/users'
 
 export const ServerRoute = createServerFileRoute('/api/expenses').methods({
   GET: async ({ request, params }) => {
-    const userId = await getClerkUserId(request)
-    console.log(userId, 'user')
+    try {
+      const userId = await getClerkUserId(request)
+      if (!userId) {
+        return json({ error: 'Unauthorized' }, { status: 401 })
+      }
 
-    const res = await axios.get<Array<User>>(
-      'https://jsonplaceholder.typicode.com/users'
-    )
+      console.log('📝 Fetching expenses for user:', userId)
+      
+      // Fetch expenses from the database
+      const expenses = await db
+        .select()
+        .from(expensesTable)
+        .where(eq(expensesTable.userId, userId))
+        .orderBy(expensesTable.occurredOn)
 
-    const list = res.data.slice(0, 10)
-    return json(list.map((u) => ({ id: u.id, name: u.name, email: u.email })))
+      return json(expenses)
+    } catch (error) {
+      console.error('❌ Error fetching expenses:', error)
+      return json({ error: 'Failed to fetch expenses' }, { status: 500 })
+    }
   },
   POST: async ({ request }) => {
     try {

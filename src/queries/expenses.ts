@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { queryOptions } from '@tanstack/react-query'
 import { mutationOptions } from '@tanstack/react-query'
-import { ExpenseForm } from '~/features/expenses/components/tasks-mutate-drawer'
+import { ExpenseForm } from '~/features/expenses/components/expense-mutate-drawer'
+import { ExpenseSelect } from '~/server/db/schema'
 
 export type User = {
   id: number
@@ -19,10 +20,10 @@ export const expensesQueryOptions = () =>
     queryFn: () => {
       console.info('Fetching expenses...')
       return axios
-        .get<Array<User>>('/api/expenses')
+        .get<Array<ExpenseSelect>>('/api/expenses')
         .then((r) => r.data)
         .catch(() => {
-          throw new Error('Failed to fetch users')
+          throw new Error('Failed to fetch expenses')
         })
     },
   })

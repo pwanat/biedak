@@ -2,13 +2,13 @@ import { showSubmittedData } from '@/utils/show-submitted-data'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useTasks } from '../context/tasks-context'
 import { TasksImportDialog } from './tasks-import-dialog'
-import { TasksMutateDrawer } from './tasks-mutate-drawer'
+import { ExpenseMutateDrawer } from './expense-mutate-drawer'
 
-export function TasksDialogs() {
+export function ExpenseDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useTasks()
   return (
     <>
-      <TasksMutateDrawer
+      <ExpenseMutateDrawer
         key='task-create'
         open={open === 'create'}
         onOpenChange={() => setOpen('create')}
@@ -22,7 +22,7 @@ export function TasksDialogs() {
 
       {currentRow && (
         <>
-          <TasksMutateDrawer
+          <ExpenseMutateDrawer
             key={`task-update-${currentRow.id}`}
             open={open === 'update'}
             onOpenChange={() => {

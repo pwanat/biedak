@@ -50,7 +50,7 @@ const formSchema = z.object({
 
 export type ExpenseForm = z.infer<typeof formSchema>
 
-export function TasksMutateDrawer({ open, onOpenChange, currentRow }: Props) {
+export function ExpenseMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   const isUpdate = !!currentRow
 
   const { mutate: postExpense } = useMutation(postExpenseMutationOptions())

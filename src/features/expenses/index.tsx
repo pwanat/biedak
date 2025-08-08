@@ -2,14 +2,16 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
 import { Main } from '@/components/layout/main'
 import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
-import { TasksDialogs } from './components/tasks-dialogs'
+import { ExpenseDialogs } from './components/expense-dialogs'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import TasksProvider from './context/tasks-context'
 import { tasks } from './data/tasks'
+import { expensesQueryOptions } from '~/queries/expenses'
 // import { expensesQueryOptions } from '@/api/expenses'
 
 export default function Expenses() {
-  // const expensesQuery = useSuspenseQuery(expensesQueryOptions())
+  const { data: expenses } = useSuspenseQuery(expensesQueryOptions())
+  console.log("🚀 ~ Expenses ~ expensesQuery:", expenses)
   // const expensesQuery = useQuery(expensesQueryOptions())
 
   // const expenses = expensesQuery.data || []
@@ -28,11 +30,11 @@ export default function Expenses() {
           <TasksPrimaryButtons />
         </div>
         <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
-          <DataTable data={tasks} columns={columns} />
+          <DataTable data={expenses} columns={columns} />
         </div>
       </Main>
 
-      <TasksDialogs />
+      <ExpenseDialogs />
     </TasksProvider>
   )
 }
