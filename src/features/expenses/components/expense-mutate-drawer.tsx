@@ -10,6 +10,7 @@ import { Expense } from '~/models/expense'
 import { categoriesQueryOptions } from '~/queries/categories'
 import {
   postExpenseMutationOptions,
+  putExpenseMutationOptions,
 } from '~/queries/expenses'
 import { mapToDropdownOptions } from '~/utils/mappers/map-to-dropdown'
 import { showSubmittedData } from '@/utils/show-submitted-data'
@@ -68,6 +69,7 @@ export function ExpenseMutateDrawer({ open, currentRow }: Props) {
   })
 
   const { mutate: postExpense } = useMutation(postExpenseMutationOptions())
+  const { mutate: putExpense } = useMutation(putExpenseMutationOptions())
 
   const form = useForm<ExpenseForm>({
     resolver: zodResolver(formSchema),
@@ -81,7 +83,11 @@ export function ExpenseMutateDrawer({ open, currentRow }: Props) {
   })
 
   const onSubmit = (data: ExpenseForm) => {
-    postExpense(data)
+    if (isUpdate) {
+      putExpense({ ...data, id: currentRow?.id })
+    } else {
+      postExpense(data)
+    }
     setDialogOpen(null)
     form.reset()
     showSubmittedData(data)
@@ -153,6 +159,7 @@ export function ExpenseMutateDrawer({ open, currentRow }: Props) {
                       onValueChange={(values) => {
                         field.onChange(values.floatValue)
                       }}
+                      
                     />
                   </FormControl>
                   <FormMessage />

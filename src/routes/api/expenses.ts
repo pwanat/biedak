@@ -102,4 +102,48 @@ export const ServerRoute = createServerFileRoute('/api/expenses').methods({
       return json({ error: 'Failed to delete expense' }, { status: 500 })
     }
   },
+  PUT: async ({ request }) => {
+    try {
+      const userId = await getClerkUserId(request)
+      if (!userId) {
+        return json({ error: 'Unauthorized' }, { status: 401 })
+      }
+
+      const { id, name, description, amount, occurredOn, categoryId } = await request.json()
+      console.log('📝 Updating expense:', id, 'for user:', userId)
+
+      // Update in database with owner check
+      const [updatedExpense] = await db
+        .update(expensesTable)
+        .set({
+          name,
+          description,
+          amount,
+          categoryId,
+          occurredOn: new Date(occurredOn),
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(expensesTable.id, id),
+            eq(expensesTable.userId, userId)
+          )
+        )
+        .returning()
+
+      if (!updatedExpense) {
+        return json({ error: 'Expense not found' }, { status: 404 })
+      }
+
+      console.log('✅ Updated expense:', updatedExpense)
+
+      return json({
+        success: true,
+        data: updatedExpense,
+      })
+    } catch (error) {
+      console.error('❌ Error updating expense:', error)
+      return json({ error: 'Failed to update expense' }, { status: 500 })
+    }
+  },
 })

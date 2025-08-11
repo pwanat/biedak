@@ -73,3 +73,25 @@ export const deleteExpenseMutationOptions = () =>
       throw new Error('Failed to delete expense')
     },
   })
+
+export const putExpenseMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async ({ id, amount, categoryId, ...data }: ExpenseForm & { id: number }) =>
+      (
+        await axios.put<ExpenseSelect>(GET_EXPENSES_PATH, {
+          id,
+          amount: mapAmountToCents(amount),
+          categoryId,
+          ...data,
+        })
+      ).data,
+    onSuccess: (_data) => {
+      toast.success('Expense updated successfully!')
+      queryClient.invalidateQueries({ queryKey: [GET_EXPENSES_PATH] })
+    },
+    onError: (error) => {
+      console.error('Error updating expense:', error)
+      toast.error('Failed to update expense')
+      throw new Error('Failed to update expense')
+    },
+  })
