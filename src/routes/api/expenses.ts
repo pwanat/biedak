@@ -2,7 +2,7 @@ import axios from 'axios'
 import { clerkClient, getAuth } from '@clerk/tanstack-react-start/server'
 import { json } from '@tanstack/react-start'
 import { createServerFileRoute } from '@tanstack/react-start/server'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { db } from '~/server/db'
 import { expensesTable } from '~/server/db/schema'
 import { getClerkUserId } from '~/utils/clerk'
@@ -64,6 +64,42 @@ export const ServerRoute = createServerFileRoute('/api/expenses').methods({
     } catch (error) {
       console.error('❌ Error processing request:', error)
       return json({ error: 'Failed to process request' }, { status: 500 })
+    }
+  },
+  DELETE: async ({ request }) => {
+    try {
+      const userId = await getClerkUserId(request)
+      if (!userId) {
+        return json({ error: 'Unauthorized' }, { status: 401 })
+      }
+
+      const { id } = await request.json()
+      console.log('🗑️ Deleting expense:', id, 'for user:', userId)
+
+      // Delete from database with owner check
+      const [deletedExpense] = await db
+        .delete(expensesTable)
+        .where(
+          and(
+            eq(expensesTable.id, id),
+            eq(expensesTable.userId, userId)
+          )
+        )
+        .returning()
+
+      if (!deletedExpense) {
+        return json({ error: 'Expense not found' }, { status: 404 })
+      }
+
+      console.log('✅ Deleted expense:', deletedExpense)
+
+      return json({
+        success: true,
+        data: deletedExpense,
+      })
+    } catch (error) {
+      console.error('❌ Error deleting expense:', error)
+      return json({ error: 'Failed to delete expense' }, { status: 500 })
     }
   },
 })

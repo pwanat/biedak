@@ -54,6 +54,22 @@ export const postExpenseMutationOptions = () =>
     },
     onError: (error) => {
       console.error('Error creating expense:', error)
+      toast.error('Failed to create expense')
       throw new Error('Failed to create expense')
+    },
+  })
+
+export const deleteExpenseMutationOptions = () =>
+  mutationOptions({
+    mutationFn: async (id: number) =>
+      (await axios.delete<ExpenseSelect>(GET_EXPENSES_PATH, { data: { id } })).data,
+    onSuccess: (_data) => {
+      toast.success('Expense deleted successfully!')
+      queryClient.invalidateQueries({ queryKey: [GET_EXPENSES_PATH] })
+    },
+    onError: (error) => {
+      console.error('Error deleting expense:', error)
+      toast.error('Failed to delete expense')
+      throw new Error('Failed to delete expense')
     },
   })

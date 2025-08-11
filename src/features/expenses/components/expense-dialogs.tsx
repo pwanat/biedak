@@ -1,3 +1,5 @@
+import { useMutation } from '@tanstack/react-query'
+import { deleteExpenseMutationOptions } from '~/queries/expenses'
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useExpensesStore } from '../expenses-store'
@@ -6,18 +8,15 @@ import { TasksImportDialog } from './tasks-import-dialog'
 
 export function ExpenseDialogs() {
   const dialogOpen = useExpensesStore((state) => state.dialogOpen)
-  console.log("🚀 ~ ExpenseDialogs ~ dialogOpen:", dialogOpen)
   const currentExpense = useExpensesStore((state) => state.currentExpense)
   const setCurrentExpense = useExpensesStore((state) => state.setCurrentExpense)
   const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)
 
+  const { mutate: deleteExpense } = useMutation(deleteExpenseMutationOptions())
+
   return (
     <>
-      <ExpenseMutateDrawer
-        key='task-create'
-        open={dialogOpen === 'create'}
-        onOpenChange={() => setDialogOpen('create')}
-      />
+      <ExpenseMutateDrawer key='task-create' open={dialogOpen === 'create'} />
 
       <TasksImportDialog
         key='tasks-import'
@@ -30,41 +29,33 @@ export function ExpenseDialogs() {
           <ExpenseMutateDrawer
             key={`task-update-${currentExpense.id}`}
             open={dialogOpen === 'update'}
-            onOpenChange={() => {
-              setDialogOpen('update')
-              setTimeout(() => {
-                setCurrentExpense(null)
-              }, 500)
-            }}
             currentRow={currentExpense}
           />
 
           <ConfirmDialog
             key='task-delete'
             destructive
-            open={open === 'delete'}
+            open={dialogOpen === 'delete'}
             onOpenChange={() => {
-              setOpen('delete')
-              setTimeout(() => {
-                setCurrentRow(null)
-              }, 500)
+              setDialogOpen(null)
             }}
             handleConfirm={() => {
-              setOpen(null)
+              setDialogOpen(null)
+              deleteExpense(currentExpense.id)
               setTimeout(() => {
-                setCurrentRow(null)
+                setCurrentExpense(null)
               }, 500)
               showSubmittedData(
-                currentRow,
-                'The following task has been deleted:'
+                currentExpense,
+                'The following expense has been deleted:'
               )
             }}
             className='max-w-md'
-            title={`Delete this task: ${currentRow.id} ?`}
+            title={`Delete this expense: ${currentExpense.id} ?`}
             desc={
               <>
-                You are about to delete a task with the ID{' '}
-                <strong>{currentRow.id}</strong>. <br />
+                You are about to delete an expense with the ID{' '}
+                <strong>{currentExpense.id}</strong>. <br />
                 This action cannot be undone.
               </>
             }
