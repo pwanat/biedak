@@ -15,6 +15,7 @@ import { FontProvider } from '~/context/font-context'
 import { ThemeProvider } from '~/context/theme-context'
 import appCss from '~/styles/app.css?url'
 import { seo } from '~/utils/seo'
+import { NavigationProgress } from '~/components/navigation-progress'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -64,6 +65,7 @@ function RootComponent() {
       <ThemeProvider defaultTheme='light' storageKey='vite-ui-theme'>
         <FontProvider>
           <RootDocument>
+            <NavigationProgress />
             <Outlet />
             <Toaster />
           </RootDocument>

@@ -1,8 +1,11 @@
 import axios from 'axios'
 import { queryOptions } from '@tanstack/react-query'
 import { mutationOptions } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import { ExpenseForm } from '~/features/expenses/components/expense-mutate-drawer'
 import { ExpenseSelect } from '~/server/db/schema'
+import { queryClient } from '~/utils/query-client'
+import { Expense } from '~/models/expense'
 
 export type User = {
   id: number
@@ -10,35 +13,47 @@ export type User = {
   email: string
 }
 
-const mapAmountToCents = (amount: number) => Math.round(amount * 100)
 
 export const DEPLOY_URL = 'http://localhost:3000'
+export const GET_EXPENSES_PATH = `/api/expenses`
+
+const mapAmountToCents = (amount: number) => Math.round(amount * 100)
+
+const mapExpenseResponse = (expense: ExpenseSelect): Expense => ({
+  ...expense,
+  occurredOn: new Date(expense?.occurredOn),
+  createdAt: new Date(expense?.createdAt),
+  updatedAt: new Date(expense?.updatedAt),
+})
+
+const fetchExpenses = async (): Promise<Expense[]> => {
+  console.info('Fetching expenses...')
+  const response = await axios.get<Array<ExpenseSelect>>(GET_EXPENSES_PATH)
+  return response.data.map(mapExpenseResponse)
+}
 
 export const expensesQueryOptions = () =>
   queryOptions({
-    queryKey: ['expenses'],
-    queryFn: () => {
-      console.info('Fetching expenses...')
-      return axios
-        .get<Array<ExpenseSelect>>('/api/expenses')
-        .then((r) => r.data)
-        .catch(() => {
-          throw new Error('Failed to fetch expenses')
-        })
-    },
+    queryKey: [GET_EXPENSES_PATH],
+    queryFn: fetchExpenses,
   })
 
 export const postExpenseMutationOptions = () =>
   mutationOptions({
-    mutationFn: ({ amount, ...data }: ExpenseForm) =>
-      axios
-        .post<ExpenseForm>('/api/expenses', {
+    mutationFn: async ({ amount, categoryId, ...data }: ExpenseForm) =>
+      (
+        await axios.post<ExpenseForm>(GET_EXPENSES_PATH, {
           amount: mapAmountToCents(amount),
+          categoryId,
           ...data,
         })
-        .then((r) => r.data)
-        .catch((error) => {
-          console.error('Error creating expense:', error)
-          throw new Error('Failed to create expense')
-        }),
+      ).data,
+    onSuccess: (_data) => {
+      toast.success('Expense created successfully!')
+      queryClient.invalidateQueries({ queryKey: [GET_EXPENSES_PATH] })
+    },
+    onError: (error) => {
+      console.error('Error creating expense:', error)
+      throw new Error('Failed to create expense')
+    },
   })

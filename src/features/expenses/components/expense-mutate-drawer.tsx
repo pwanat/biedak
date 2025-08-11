@@ -4,13 +4,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useSuspenseQuery } from '@tanstack/react-query'
 import { DatePicker } from '~/components/date-picker'
 import { NumericInput } from '~/components/numeric-input'
+import { SelectDropdown } from '~/components/select-dropdown'
 import { Textarea } from '~/components/ui/textarea'
+import { Expense } from '~/models/expense'
 import { categoriesQueryOptions } from '~/queries/categories'
 import {
   postExpenseMutationOptions,
-  postExpenseQueryOptions,
 } from '~/queries/expenses'
-import { ExpenseSelect } from '~/server/db/schema'
+import { mapToDropdownOptions } from '~/utils/mappers/map-to-dropdown'
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { Button } from '@/components/ui/button'
 import {
@@ -33,11 +34,11 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { useExpensesStore } from '../expenses-store'
 
 interface Props {
   open: boolean
-  onOpenChange: (open: boolean) => void
-  currentRow?: ExpenseSelect
+  currentRow?: Expense
 }
 
 const formSchema = z.object({
@@ -45,6 +46,7 @@ const formSchema = z.object({
     .string()
     .min(1, 'Name is required.')
     .max(256, 'Name cant be longer than 256 characters.'),
+  categoryId: z.string().min(1, 'Category is required.'),
   description: z
     .string()
     .max(1024, 'Description cant be longer than 1024 characters.'),
@@ -54,18 +56,24 @@ const formSchema = z.object({
 
 export type ExpenseForm = z.infer<typeof formSchema>
 
-export function ExpenseMutateDrawer({ open, onOpenChange, currentRow }: Props) {
+export function ExpenseMutateDrawer({ open, currentRow }: Props) {
+  const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)
+  console.log('🚀 ~ ExpenseMutateDrawer ~ currentRow:', currentRow)
   const isUpdate = !!currentRow
 
   const { data: categories } = useSuspenseQuery(categoriesQueryOptions())
-  console.log("🚀 ~ ExpenseMutateDrawer ~ categories:", categories)
+  const categoriesOptions = mapToDropdownOptions(categories, {
+    labelKey: 'label',
+    valueKey: 'id',
+  })
+
   const { mutate: postExpense } = useMutation(postExpenseMutationOptions())
 
   const form = useForm<ExpenseForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: currentRow?.name || '',
-      category: currentRow?.category || '',
+      categoryId: String(currentRow?.categoryId || ''),
       description: currentRow?.description || '',
       amount: currentRow?.amount || 0,
       occurredOn: currentRow?.occurredOn || new Date(),
@@ -74,7 +82,7 @@ export function ExpenseMutateDrawer({ open, onOpenChange, currentRow }: Props) {
 
   const onSubmit = (data: ExpenseForm) => {
     postExpense(data)
-    onOpenChange(false)
+    setDialogOpen(null)
     form.reset()
     showSubmittedData(data)
   }
@@ -82,8 +90,8 @@ export function ExpenseMutateDrawer({ open, onOpenChange, currentRow }: Props) {
   return (
     <Sheet
       open={open}
-      onOpenChange={(v) => {
-        onOpenChange(v)
+      onOpenChange={() => {
+        setDialogOpen(null)
         form.reset()
       }}
     >
@@ -92,8 +100,8 @@ export function ExpenseMutateDrawer({ open, onOpenChange, currentRow }: Props) {
           <SheetTitle>{isUpdate ? 'Update' : 'Create'} Task</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? 'Update the task by providing necessary info.'
-              : 'Add a new task by providing necessary info.'}
+              ? 'Update the task by providing necessary info. '
+              : 'Add a new task by providing necessary info. '}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>
@@ -118,22 +126,16 @@ export function ExpenseMutateDrawer({ open, onOpenChange, currentRow }: Props) {
             />
             <FormField
               control={form.control}
-              name='description'
+              name='categoryId'
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder='Optional expenses description'
-                      maxLength={1024}
-                      className='resize-none'
-                      {...field}
-                    />
-                  </FormControl>
-                  {/* <FormDescription>
-                    You can <span>@mention</span> other users and organizations
-                    to link to them.
-                  </FormDescription> */}
+                <FormItem className='space-y-1'>
+                  <FormLabel>Status</FormLabel>
+                  <SelectDropdown
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                    placeholder='Select dropdown'
+                    items={categoriesOptions}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -174,8 +176,31 @@ export function ExpenseMutateDrawer({ open, onOpenChange, currentRow }: Props) {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name='description'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder='Optional expenses description'
+                      maxLength={1024}
+                      className='resize-none'
+                      {...field}
+                    />
+                  </FormControl>
+                  {/* <FormDescription>
+                    You can <span>@mention</span> other users and organizations
+                    to link to them.
+                  </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </form>
         </Form>
+
         <SheetFooter className='gap-2'>
           <SheetClose asChild>
             <Button variant='outline'>Close</Button>

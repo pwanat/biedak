@@ -1,37 +1,42 @@
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { useTasks } from '../context/tasks-context'
-import { TasksImportDialog } from './tasks-import-dialog'
+import { useExpensesStore } from '../expenses-store'
 import { ExpenseMutateDrawer } from './expense-mutate-drawer'
+import { TasksImportDialog } from './tasks-import-dialog'
 
 export function ExpenseDialogs() {
-  const { open, setOpen, currentRow, setCurrentRow } = useTasks()
+  const dialogOpen = useExpensesStore((state) => state.dialogOpen)
+  console.log("🚀 ~ ExpenseDialogs ~ dialogOpen:", dialogOpen)
+  const currentExpense = useExpensesStore((state) => state.currentExpense)
+  const setCurrentExpense = useExpensesStore((state) => state.setCurrentExpense)
+  const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)
+
   return (
     <>
       <ExpenseMutateDrawer
         key='task-create'
-        open={open === 'create'}
-        onOpenChange={() => setOpen('create')}
+        open={dialogOpen === 'create'}
+        onOpenChange={() => setDialogOpen('create')}
       />
 
       <TasksImportDialog
         key='tasks-import'
-        open={open === 'import'}
-        onOpenChange={() => setOpen('import')}
+        open={dialogOpen === 'import'}
+        onOpenChange={() => setDialogOpen('import')}
       />
 
-      {currentRow && (
+      {currentExpense && (
         <>
           <ExpenseMutateDrawer
-            key={`task-update-${currentRow.id}`}
-            open={open === 'update'}
+            key={`task-update-${currentExpense.id}`}
+            open={dialogOpen === 'update'}
             onOpenChange={() => {
-              setOpen('update')
+              setDialogOpen('update')
               setTimeout(() => {
-                setCurrentRow(null)
+                setCurrentExpense(null)
               }, 500)
             }}
-            currentRow={currentRow}
+            currentRow={currentExpense}
           />
 
           <ConfirmDialog

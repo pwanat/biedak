@@ -37,7 +37,7 @@ export const ServerRoute = createServerFileRoute('/api/expenses').methods({
         return json({ error: 'Unauthorized' }, { status: 401 })
       }
 
-      const { name, description, amount, occurredOn } = await request.json()
+      const { name, description, amount, occurredOn, categoryId } = await request.json()
       console.log('📝 Creating expense for user:', userId)
 
       // Insert into database
@@ -46,6 +46,7 @@ export const ServerRoute = createServerFileRoute('/api/expenses').methods({
         .values({
           userId,
           name,
+          categoryId,
           description,
           amount,
           occurredOn: new Date(occurredOn),

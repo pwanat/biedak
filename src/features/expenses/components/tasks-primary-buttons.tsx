@@ -1,19 +1,19 @@
 import { IconDownload, IconPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
-import { useTasks } from '../context/tasks-context'
+import { useExpensesStore } from '../expenses-store'
 
 export function TasksPrimaryButtons() {
-  const { setOpen } = useTasks()
+  const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)
   return (
     <div className='flex gap-2'>
       <Button
         variant='outline'
         className='space-x-1'
-        onClick={() => setOpen('import')}
+        onClick={() => setDialogOpen('import')}
       >
         <span>Import</span> <IconDownload size={18} />
       </Button>
-      <Button className='space-x-1' onClick={() => setOpen('create')}>
+      <Button className='space-x-1' onClick={() => setDialogOpen('create')}>
         <span>Create</span> <IconPlus size={18} />
       </Button>
     </div>

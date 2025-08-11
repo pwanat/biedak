@@ -23,13 +23,14 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from '../components/data-table-pagination'
 import { DataTableToolbar } from '../components/data-table-toolbar'
+import { Expense } from '~/models/expense'
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends Expense, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Expense, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {

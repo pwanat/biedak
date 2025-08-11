@@ -1,14 +1,17 @@
 import { format } from 'date-fns'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
+import { categoriesQueryOptions } from '~/queries/categories'
 import { ExpenseSelect } from '~/server/db/schema'
+import { formatCurrency } from '~/utils/currency'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { statuses } from '../data/data'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
-import { formatCurrency } from '~/utils/currency'
+import { Expense } from '~/models/expense'
 
-export const columns: ColumnDef<ExpenseSelect>[] = [
+export const columns: ColumnDef<Expense>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -47,46 +50,23 @@ export const columns: ColumnDef<ExpenseSelect>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'category',
+    accessorKey: 'categoryId',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Category' />
     ),
     cell: ({ row }) => {
-      // const label = labels.find((label) => label.value === row.original.label)
-
+      const { data: categories } = useSuspenseQuery(categoriesQueryOptions())
+      const label = categories.find(
+        (category) => category.id === row.getValue('categoryId')
+      )?.label
       return (
         <div className='flex space-x-2'>
-          {/* {label && <Badge variant='outline'>{label.label}</Badge>}
+          {/* {label && <Badge variant='outline'>{label.label}</Badge>} */}
           <span className='max-w-32 truncate font-medium sm:max-w-72 md:max-w-[31rem]'>
-            {row.getValue('category')}
-          </span> */}
-          Tu bedzie kategoria + tagi
+            {label}
+          </span>
         </div>
       )
-    },
-  },
-  {
-    // TODO: move tags to name column when they are ready
-    accessorKey: 'tags',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Tags' />
-    ),
-    cell: ({ row }) => {
-      const tags = row.getValue('tags') || []
-      console.log('🚀 ~ row:', row)
-      console.log("🚀 ~ row.getValue('currency'):", row.getValue('currency'))
-      return (
-        <div className='flex items-center'>
-          {tags?.map((tag) => (
-            <Badge key={tag} variant='outline'>
-              {tag}
-            </Badge>
-          ))}
-        </div>
-      )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
     },
   },
   {

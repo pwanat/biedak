@@ -1,6 +1,7 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
 import { IconTrash } from '@tabler/icons-react'
+import { Expense } from '~/models/expense'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -15,22 +16,19 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useTasks } from '../context/tasks-context'
 import { labels } from '../data/data'
-import { expenseSelectSchema } from '~/server/db/schema'
+import { useExpensesStore } from '../expenses-store'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
-export function DataTableRowActions<TData>({
+export function DataTableRowActions<TData extends Expense>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  // const task = expenseSelectSchema.parse(row.original)
-  // console.log("🚀 ~ DataTableRowActions ~ task:", task)
-
-  const task = {};
-  const { setOpen, setCurrentRow } = useTasks()
+  const expense = row.original
+  const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)
+  const setCurrentExpense = useExpensesStore((state) => state.setCurrentExpense)
 
   return (
     <DropdownMenu modal={false}>
@@ -46,8 +44,8 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem
           onClick={() => {
-            setCurrentRow(task)
-            setOpen('update')
+            setCurrentExpense(expense)
+            setDialogOpen('update')
           }}
         >
           Edit
@@ -58,7 +56,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.name}>
+            <DropdownMenuRadioGroup value={expense.name}>
               {labels.map((label) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}
@@ -70,8 +68,8 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            setCurrentRow(task)
-            setOpen('delete')
+            setCurrentExpense(expense)
+            setDialogOpen('delete')
           }}
         >
           Delete

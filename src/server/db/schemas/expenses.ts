@@ -12,7 +12,9 @@ import { z } from 'zod'
 import { categoriesTable } from './categories'
 
 export const currencyEnum = pgEnum('currency', ['PLN'])
+
 export const statusEnum = pgEnum('status', ['pending', 'done', 'rejected'])
+export type ExpenseStatus = typeof statusEnum.enumValues[number]
 
 export const expensesTable = pgTable(
   'biedak_expense',
@@ -44,8 +46,22 @@ export const expensesTable = pgTable(
   ]
 )
 
-export const expenseSelectSchema = createSelectSchema(expensesTable, {})
-export type ExpenseSelect = z.infer<typeof expenseSelectSchema>
+// export const expenseSelectSchema = createSelectSchema(expensesTable)
+// export type ExpenseSelect = z.infer<typeof expenseSelectSchema>
+
+export type ExpenseSelect = {
+  id: number
+  userId: string
+  name: string
+  description?: string
+  amount: number
+  currency: string
+  categoryId: number
+  status: ExpenseStatus
+  occurredOn: string
+  createdAt: string
+  updatedAt: string
+}
 
 export const expenseInsertSchema = createInsertSchema(expensesTable, {
   id: false,
