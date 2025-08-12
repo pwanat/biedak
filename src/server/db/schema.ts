@@ -9,4 +9,5 @@ import { pgTableCreator } from 'drizzle-orm/pg-core'
 export const createTable = pgTableCreator((name) => `biedak_${name}`)
 
 export * from './schemas/expenses'
+export * from './schemas/income'
 export * from './schemas/categories'

@@ -113,7 +113,7 @@ export function ExpenseMutateDrawer({ open, currentRow }: Props) {
         </SheetHeader>
         <Form {...form}>
           <form
-            id='tasks-form'
+            id='expenses-form'
             onSubmit={form.handleSubmit(onSubmit)}
             className='flex-1 space-y-5 px-4'
           >
@@ -159,7 +159,7 @@ export function ExpenseMutateDrawer({ open, currentRow }: Props) {
                       onValueChange={(values) => {
                         field.onChange(values.floatValue)
                       }}
-                      
+
                     />
                   </FormControl>
                   <FormMessage />
@@ -212,7 +212,7 @@ export function ExpenseMutateDrawer({ open, currentRow }: Props) {
           <SheetClose asChild>
             <Button variant='outline'>Close</Button>
           </SheetClose>
-          <Button form='tasks-form' type='submit'>
+          <Button form='expenses-form' type='submit'>
             Save changes
           </Button>
         </SheetFooter>

@@ -1,4 +1,3 @@
-import { z } from 'zod'
 import { sql } from 'drizzle-orm'
 import {
   index,
@@ -8,19 +7,15 @@ import {
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core'
-import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-} from 'drizzle-zod'
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod'
+import { z } from 'zod'
 import { currencyEnum } from '../enums'
-import { categoriesTable } from './categories'
 
-export const statusEnum = pgEnum('status', ['pending', 'done', 'rejected'])
-export type ExpenseStatus = (typeof statusEnum.enumValues)[number]
+export const incomeStatusEnum = pgEnum('status', ['pending', 'done'])
+export type IncomeStatus = typeof incomeStatusEnum.enumValues[number]
 
-export const expensesTable = pgTable(
-  'biedak_expense',
+export const incomeTable = pgTable(
+  'biedak_income',
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
     userId: varchar('user_id', { length: 256 }).notNull(),
@@ -28,7 +23,7 @@ export const expensesTable = pgTable(
     description: varchar('description', { length: 1024 }),
     amount: integer('amount').notNull(),
     currency: currencyEnum().notNull(),
-    status: statusEnum().notNull(),
+    status: incomeStatusEnum().notNull(),
     occurredOn: timestamp('occurred_on', { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -38,44 +33,39 @@ export const expensesTable = pgTable(
     updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(
       () => new Date()
     ),
-    categoryId: integer('category_id')
-      .references(() => categoriesTable.id)
-      .notNull(),
   },
   (table) => [
     { nameIndex: index('name_idx').on(table.name) },
     { userIndex: index('user_idx').on(table.userId) },
-    { categoryIndex: index('category_idx').on(table.categoryId) },
   ]
 )
 
 // export const expenseSelectSchema = createSelectSchema(expensesTable)
 // export type ExpenseSelect = z.infer<typeof expenseSelectSchema>
 
-export type ExpenseSelect = {
+export type IncomeSelect = {
   id: number
   userId: string
   name: string
   description?: string
   amount: number
   currency: string
-  categoryId: number
-  status: ExpenseStatus
+  status: IncomeStatus
   occurredOn: string
   createdAt: string
   updatedAt: string
 }
 
-export const expenseInsertSchema = createInsertSchema(expensesTable, {
+export const incomeInsertSchema = createInsertSchema(incomeTable, {
   id: false,
   createdAt: false,
   updatedAt: false,
 })
-export type ExpenseInsert = z.infer<typeof expenseInsertSchema>
+export type IncomeInsert = z.infer<typeof incomeInsertSchema>
 
-export const expenseUpdateSchema = createUpdateSchema(expensesTable, {
+export const incomeUpdateSchema = createUpdateSchema(incomeTable, {
   id: false,
   createdAt: false,
   updatedAt: true,
 })
-export type ExpenseUpdate = z.infer<typeof expenseUpdateSchema>
+export type IncomeUpdate = z.infer<typeof incomeUpdateSchema>

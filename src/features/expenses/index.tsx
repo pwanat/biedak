@@ -4,6 +4,7 @@ import { Main } from '@/components/layout/main'
 import { columns } from './components/columns'
 import { DataTable } from './components/data-table'
 import { ExpenseDialogs } from './components/expense-dialogs'
+import { IncomeCard } from './components/income-card'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import { tasks } from './data/tasks'
 
@@ -29,8 +30,16 @@ export default function Expenses() {
           </div>
           <TasksPrimaryButtons />
         </div>
-        <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
+        {/* <div className='-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-y-0 lg:space-x-12'>
           <DataTable data={expenses} columns={columns} />
+        </div> */}
+        <div className='flex flex-col-reverse gap-6 lg:flex-row'>
+          <div className='-mx-4 flex-1 overflow-auto px-4 py-1'>
+            <DataTable data={expenses} columns={columns} />
+          </div>
+          <div className='w-160'>
+            <IncomeCard />
+          </div>
         </div>
       </Main>
 
