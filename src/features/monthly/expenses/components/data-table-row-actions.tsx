@@ -16,8 +16,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { labels } from '../data/data'
-import { useExpensesStore } from '../expenses-store'
+import { labels } from '../../data/data'
+import { useExpensesStore } from '../../expenses-store'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>

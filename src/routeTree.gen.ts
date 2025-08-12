@@ -19,7 +19,7 @@ import { Route as errors404RouteImport } from './routes/(errors)/404'
 import { Route as errors403RouteImport } from './routes/(errors)/403'
 import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
-import { Route as AuthenticatedExpensesIndexRouteImport } from './routes/_authenticated/expenses/index'
+import { Route as AuthenticatedMonthlyIndexRouteImport } from './routes/_authenticated/monthly/index'
 import { ServerRoute as ApiUsersServerRouteImport } from './routes/api/users'
 import { ServerRoute as ApiExpensesServerRouteImport } from './routes/api/expenses'
 import { ServerRoute as ApiCategoriesServerRouteImport } from './routes/api/categories'
@@ -66,10 +66,10 @@ const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   path: '/users/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedExpensesIndexRoute =
-  AuthenticatedExpensesIndexRouteImport.update({
-    id: '/expenses/',
-    path: '/expenses/',
+const AuthenticatedMonthlyIndexRoute =
+  AuthenticatedMonthlyIndexRouteImport.update({
+    id: '/monthly/',
+    path: '/monthly/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const ApiUsersServerRoute = ApiUsersServerRouteImport.update({
@@ -100,7 +100,7 @@ export interface FileRoutesByFullPath {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
-  '/expenses': typeof AuthenticatedExpensesIndexRoute
+  '/monthly': typeof AuthenticatedMonthlyIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesByTo {
@@ -110,7 +110,7 @@ export interface FileRoutesByTo {
   '/500': typeof errors500Route
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
-  '/expenses': typeof AuthenticatedExpensesIndexRoute
+  '/monthly': typeof AuthenticatedMonthlyIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRoutesById {
@@ -122,7 +122,7 @@ export interface FileRoutesById {
   '/(errors)/500': typeof errors500Route
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
-  '/_authenticated/expenses/': typeof AuthenticatedExpensesIndexRoute
+  '/_authenticated/monthly/': typeof AuthenticatedMonthlyIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
 }
 export interface FileRouteTypes {
@@ -134,10 +134,10 @@ export interface FileRouteTypes {
     | '/500'
     | '/503'
     | '/'
-    | '/expenses'
+    | '/monthly'
     | '/users'
   fileRoutesByTo: FileRoutesByTo
-  to: '/401' | '/403' | '/404' | '/500' | '/503' | '/' | '/expenses' | '/users'
+  to: '/401' | '/403' | '/404' | '/500' | '/503' | '/' | '/monthly' | '/users'
   id:
     | '__root__'
     | '/_authenticated'
@@ -147,7 +147,7 @@ export interface FileRouteTypes {
     | '/(errors)/500'
     | '/(errors)/503'
     | '/_authenticated/'
-    | '/_authenticated/expenses/'
+    | '/_authenticated/monthly/'
     | '/_authenticated/users/'
   fileRoutesById: FileRoutesById
 }
@@ -259,11 +259,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/expenses/': {
-      id: '/_authenticated/expenses/'
-      path: '/expenses'
-      fullPath: '/expenses'
-      preLoaderRoute: typeof AuthenticatedExpensesIndexRouteImport
+    '/_authenticated/monthly/': {
+      id: '/_authenticated/monthly/'
+      path: '/monthly'
+      fullPath: '/monthly'
+      preLoaderRoute: typeof AuthenticatedMonthlyIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
   }
@@ -303,13 +303,13 @@ declare module '@tanstack/react-start/server' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedExpensesIndexRoute: typeof AuthenticatedExpensesIndexRoute
+  AuthenticatedMonthlyIndexRoute: typeof AuthenticatedMonthlyIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedExpensesIndexRoute: AuthenticatedExpensesIndexRoute,
+  AuthenticatedMonthlyIndexRoute: AuthenticatedMonthlyIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
 }
 

@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import { deleteExpenseMutationOptions } from '~/queries/expenses'
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { useExpensesStore } from '../expenses-store'
+import { useExpensesStore } from '../../expenses-store'
 import { ExpenseMutateDrawer } from './expense-mutate-drawer'
 import { TasksImportDialog } from './tasks-import-dialog'
 

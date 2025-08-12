@@ -1,6 +1,6 @@
 import { IconDownload, IconPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
-import { useExpensesStore } from '../expenses-store'
+import { useExpensesStore } from '../../expenses-store'
 
 export function TasksPrimaryButtons() {
   const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)

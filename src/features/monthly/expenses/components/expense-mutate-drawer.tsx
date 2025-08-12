@@ -35,7 +35,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { useExpensesStore } from '../expenses-store'
+import { useExpensesStore } from '../../expenses-store'
 
 interface Props {
   open: boolean
