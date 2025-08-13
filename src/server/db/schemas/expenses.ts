@@ -16,8 +16,8 @@ import {
 import { currencyEnum } from '../enums'
 import { categoriesTable } from './categories'
 
-export const statusEnum = pgEnum('status', ['pending', 'done', 'rejected'])
-export type ExpenseStatus = (typeof statusEnum.enumValues)[number]
+export const expenseStatusEnum = pgEnum('expense_status', ['pending', 'done', 'rejected'])
+export type ExpenseStatus = (typeof expenseStatusEnum.enumValues)[number]
 
 export const expensesTable = pgTable(
   'biedak_expense',
@@ -28,7 +28,7 @@ export const expensesTable = pgTable(
     description: varchar('description', { length: 1024 }),
     amount: integer('amount').notNull(),
     currency: currencyEnum().notNull(),
-    status: statusEnum().notNull(),
+    status: expenseStatusEnum().notNull(),
     occurredOn: timestamp('occurred_on', { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

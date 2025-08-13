@@ -11,7 +11,7 @@ import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'driz
 import { z } from 'zod'
 import { currencyEnum } from '../enums'
 
-export const incomeStatusEnum = pgEnum('status', ['pending', 'done'])
+export const incomeStatusEnum = pgEnum('income_status', ['pending', 'done'])
 export type IncomeStatus = typeof incomeStatusEnum.enumValues[number]
 
 export const incomeTable = pgTable(
