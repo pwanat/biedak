@@ -55,7 +55,7 @@ export type IncomeSelect = {
   createdAt: string
   updatedAt: string
 }
-
+  
 export const incomeInsertSchema = createInsertSchema(incomeTable, {
   id: false,
   createdAt: false,

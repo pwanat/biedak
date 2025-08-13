@@ -2,15 +2,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { formatCurrency } from "~/utils/currency"
+import { useMonthlyStore } from "../monthly-store"
 
 export function Income() {
   const monthlyIncome = 5000 // This will come from your state/store later
+  const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
 
   return (
     <Card className="w-160">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-xl font-bold">Monthly Income</CardTitle>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon"  onClick={() => setDialogOpen('income-create')}>
           <PlusIcon className="h-4 w-4" />
         </Button>
       </CardHeader>

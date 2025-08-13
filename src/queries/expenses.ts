@@ -2,10 +2,13 @@ import axios from 'axios'
 import { queryOptions } from '@tanstack/react-query'
 import { mutationOptions } from '@tanstack/react-query'
 import { toast } from 'sonner'
+
+// TODO: refactor to ExpensePayload
 import { ExpenseForm } from '~/features/expenses/components/expense-mutate-drawer'
-import { ExpenseSelect } from '~/server/db/schema'
-import { queryClient } from '~/utils/query-client'
 import { Expense } from '~/models/expense'
+import { ExpenseSelect } from '~/server/db/schema'
+import { mapAmountToCents } from '~/utils/mappers/common'
+import { queryClient } from '~/utils/query-client'
 
 export type User = {
   id: number
@@ -13,11 +16,8 @@ export type User = {
   email: string
 }
 
-
 export const DEPLOY_URL = 'http://localhost:3000'
 export const GET_EXPENSES_PATH = `/api/expenses`
-
-const mapAmountToCents = (amount: number) => Math.round(amount * 100)
 
 const mapExpenseResponse = (expense: ExpenseSelect): Expense => ({
   ...expense,
@@ -62,7 +62,8 @@ export const postExpenseMutationOptions = () =>
 export const deleteExpenseMutationOptions = () =>
   mutationOptions({
     mutationFn: async (id: number) =>
-      (await axios.delete<ExpenseSelect>(GET_EXPENSES_PATH, { data: { id } })).data,
+      (await axios.delete<ExpenseSelect>(GET_EXPENSES_PATH, { data: { id } }))
+        .data,
     onSuccess: (_data) => {
       toast.success('Expense deleted successfully!')
       queryClient.invalidateQueries({ queryKey: [GET_EXPENSES_PATH] })
@@ -76,7 +77,12 @@ export const deleteExpenseMutationOptions = () =>
 
 export const putExpenseMutationOptions = () =>
   mutationOptions({
-    mutationFn: async ({ id, amount, categoryId, ...data }: ExpenseForm & { id: number }) =>
+    mutationFn: async ({
+      id,
+      amount,
+      categoryId,
+      ...data
+    }: ExpenseForm & { id: number }) =>
       (
         await axios.put<ExpenseSelect>(GET_EXPENSES_PATH, {
           id,

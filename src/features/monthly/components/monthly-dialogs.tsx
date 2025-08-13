@@ -5,10 +5,12 @@ import { ConfirmDialog } from '@/components/confirm-dialog'
 import { useMonthlyStore } from '../monthly-store'
 import { ExpenseMutateDrawer } from '../expenses/components/expense-mutate-drawer'
 import { TasksImportDialog } from '../expenses/components/tasks-import-dialog'
+import { IncomeMutateDrawer } from '../income/components/income-mutate-drawer'
 
 export function MonthlyDialogs() {
   const dialogOpen = useMonthlyStore((state) => state.dialogOpen)
   const currentExpense = useMonthlyStore((state) => state.currentExpense)
+  const currentIncome = useMonthlyStore((state) => state.currentIncome)
   const setCurrentExpense = useMonthlyStore((state) => state.setCurrentExpense)
   const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
 
@@ -17,6 +19,7 @@ export function MonthlyDialogs() {
   return (
     <>
       <ExpenseMutateDrawer key='task-create' open={dialogOpen === 'create'} />
+      <IncomeMutateDrawer key='income-create' open={dialogOpen === 'income-create'} />
 
       <TasksImportDialog
         key='tasks-import'
@@ -30,6 +33,11 @@ export function MonthlyDialogs() {
             key={`task-update-${currentExpense.id}`}
             open={dialogOpen === 'update'}
             currentRow={currentExpense}
+          />
+          <IncomeMutateDrawer
+            key={`task-update-${currentExpense.id}`}
+            open={dialogOpen === 'income-update'}
+            currentRow={currentIncome}
           />
 
           <ConfirmDialog

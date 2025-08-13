@@ -1,0 +1,1 @@
+export const mapAmountToCents = (amount: number) => Math.round(amount * 100)
