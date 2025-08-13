@@ -21,6 +21,7 @@ import { Route as errors401RouteImport } from './routes/(errors)/401'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedMonthlyIndexRouteImport } from './routes/_authenticated/monthly/index'
 import { ServerRoute as ApiUsersServerRouteImport } from './routes/api/users'
+import { ServerRoute as ApiIncomeServerRouteImport } from './routes/api/income'
 import { ServerRoute as ApiExpensesServerRouteImport } from './routes/api/expenses'
 import { ServerRoute as ApiCategoriesServerRouteImport } from './routes/api/categories'
 import { ServerRoute as ApiUsersIdServerRouteImport } from './routes/api/users.$id'
@@ -75,6 +76,11 @@ const AuthenticatedMonthlyIndexRoute =
 const ApiUsersServerRoute = ApiUsersServerRouteImport.update({
   id: '/api/users',
   path: '/api/users',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const ApiIncomeServerRoute = ApiIncomeServerRouteImport.update({
+  id: '/api/income',
+  path: '/api/income',
   getParentRoute: () => rootServerRouteImport,
 } as any)
 const ApiExpensesServerRoute = ApiExpensesServerRouteImport.update({
@@ -162,12 +168,14 @@ export interface RootRouteChildren {
 export interface FileServerRoutesByFullPath {
   '/api/categories': typeof ApiCategoriesServerRoute
   '/api/expenses': typeof ApiExpensesServerRoute
+  '/api/income': typeof ApiIncomeServerRoute
   '/api/users': typeof ApiUsersServerRouteWithChildren
   '/api/users/$id': typeof ApiUsersIdServerRoute
 }
 export interface FileServerRoutesByTo {
   '/api/categories': typeof ApiCategoriesServerRoute
   '/api/expenses': typeof ApiExpensesServerRoute
+  '/api/income': typeof ApiIncomeServerRoute
   '/api/users': typeof ApiUsersServerRouteWithChildren
   '/api/users/$id': typeof ApiUsersIdServerRoute
 }
@@ -175,6 +183,7 @@ export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
   '/api/categories': typeof ApiCategoriesServerRoute
   '/api/expenses': typeof ApiExpensesServerRoute
+  '/api/income': typeof ApiIncomeServerRoute
   '/api/users': typeof ApiUsersServerRouteWithChildren
   '/api/users/$id': typeof ApiUsersIdServerRoute
 }
@@ -183,14 +192,21 @@ export interface FileServerRouteTypes {
   fullPaths:
     | '/api/categories'
     | '/api/expenses'
+    | '/api/income'
     | '/api/users'
     | '/api/users/$id'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/categories' | '/api/expenses' | '/api/users' | '/api/users/$id'
+  to:
+    | '/api/categories'
+    | '/api/expenses'
+    | '/api/income'
+    | '/api/users'
+    | '/api/users/$id'
   id:
     | '__root__'
     | '/api/categories'
     | '/api/expenses'
+    | '/api/income'
     | '/api/users'
     | '/api/users/$id'
   fileServerRoutesById: FileServerRoutesById
@@ -198,6 +214,7 @@ export interface FileServerRouteTypes {
 export interface RootServerRouteChildren {
   ApiCategoriesServerRoute: typeof ApiCategoriesServerRoute
   ApiExpensesServerRoute: typeof ApiExpensesServerRoute
+  ApiIncomeServerRoute: typeof ApiIncomeServerRoute
   ApiUsersServerRoute: typeof ApiUsersServerRouteWithChildren
 }
 
@@ -277,6 +294,13 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof ApiUsersServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
+    '/api/income': {
+      id: '/api/income'
+      path: '/api/income'
+      fullPath: '/api/income'
+      preLoaderRoute: typeof ApiIncomeServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
     '/api/expenses': {
       id: '/api/expenses'
       path: '/api/expenses'
@@ -342,6 +366,7 @@ export const routeTree = rootRouteImport
 const rootServerRouteChildren: RootServerRouteChildren = {
   ApiCategoriesServerRoute: ApiCategoriesServerRoute,
   ApiExpensesServerRoute: ApiExpensesServerRoute,
+  ApiIncomeServerRoute: ApiIncomeServerRoute,
   ApiUsersServerRoute: ApiUsersServerRouteWithChildren,
 }
 export const serverRouteTree = rootServerRouteImport
