@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { labels } from '../../data/data'
-import { useExpensesStore } from '../../expenses-store'
+import { useMonthlyStore } from '../../monthly-store'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -27,8 +27,8 @@ export function DataTableRowActions<TData extends Expense>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const expense = row.original
-  const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)
-  const setCurrentExpense = useExpensesStore((state) => state.setCurrentExpense)
+  const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
+  const setCurrentExpense = useMonthlyStore((state) => state.setCurrentExpense)
 
   return (
     <DropdownMenu modal={false}>

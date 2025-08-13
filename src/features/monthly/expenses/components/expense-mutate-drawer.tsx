@@ -35,7 +35,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { useExpensesStore } from '../../expenses-store'
+import { useMonthlyStore } from '../../monthly-store'
 
 interface Props {
   open: boolean
@@ -58,7 +58,7 @@ const formSchema = z.object({
 export type ExpenseForm = z.infer<typeof formSchema>
 
 export function ExpenseMutateDrawer({ open, currentRow }: Props) {
-  const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)
+  const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
   console.log('🚀 ~ ExpenseMutateDrawer ~ currentRow:', currentRow)
   const isUpdate = !!currentRow
 
@@ -103,11 +103,11 @@ export function ExpenseMutateDrawer({ open, currentRow }: Props) {
     >
       <SheetContent className='flex flex-col'>
         <SheetHeader className='text-left'>
-          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Task</SheetTitle>
+          <SheetTitle>{isUpdate ? 'Update' : 'Create'} Expense</SheetTitle>
           <SheetDescription>
             {isUpdate
-              ? 'Update the task by providing necessary info. '
-              : 'Add a new task by providing necessary info. '}
+              ? 'Update the expense by providing necessary info. '
+              : 'Add a new expense by providing necessary info. '}
             Click save when you&apos;re done.
           </SheetDescription>
         </SheetHeader>

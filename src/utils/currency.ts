@@ -1,6 +1,7 @@
 const formatters: Record<string, Intl.NumberFormat> = {}
 
-export function formatCurrency(amount: number, currency: string): string {
+export function formatCurrency(amount: number, currency: string = 'USD'): string {
+
   const locale = typeof navigator !== 'undefined' 
     ? navigator.language 
     : 'pl-PL' // fallback for SSR

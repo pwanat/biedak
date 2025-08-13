@@ -1,10 +1,13 @@
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { Table } from '@tanstack/react-table'
+import { IconDownload, IconPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { DataTableViewOptions } from './data-table-view-options'
 import { priorities, statuses } from '../../data/data'
+import { useMonthlyStore } from '../../monthly-store'
 import { DataTableFacetedFilter } from './data-table-faceted-filter'
+import { DataTableViewOptions } from './data-table-view-options'
+import { TasksPrimaryButtons } from './tasks-primary-buttons'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -14,6 +17,7 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
+  const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
 
   return (
     <div className='flex items-center justify-between'>
@@ -46,7 +50,25 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <div className='flex items-center space-x-2'>
+        <DataTableViewOptions table={table} />
+        <Button
+          variant='outline'
+          className='ml-auto hidden lg:flex'
+          onClick={() => setDialogOpen('import')}
+          size='sm'
+          disabled
+        >
+          <span>Import</span> <IconDownload size={18} />
+        </Button>
+        <Button
+          size='sm'
+          className='ml-auto hidden lg:flex'
+          onClick={() => setDialogOpen('create')}
+        >
+          <span>Create</span> <IconPlus size={18} />
+        </Button>
+      </div>
     </div>
   )
 }

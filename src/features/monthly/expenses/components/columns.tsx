@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
+import { Expense } from '~/models/expense'
 import { categoriesQueryOptions } from '~/queries/categories'
 import { ExpenseSelect } from '~/server/db/schema'
 import { formatCurrency } from '~/utils/currency'
@@ -9,7 +10,6 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { statuses } from '../../data/data'
 import { DataTableColumnHeader } from './data-table-column-header'
 import { DataTableRowActions } from './data-table-row-actions'
-import { Expense } from '~/models/expense'
 
 export const columns: ColumnDef<Expense>[] = [
   {
@@ -55,6 +55,7 @@ export const columns: ColumnDef<Expense>[] = [
       <DataTableColumnHeader column={column} title='Category' />
     ),
     cell: ({ row }) => {
+      console.log('🚀 ~ row:', row)
       const { data: categories } = useSuspenseQuery(categoriesQueryOptions())
       const label = categories.find(
         (category) => category.id === row.getValue('categoryId')
@@ -79,18 +80,14 @@ export const columns: ColumnDef<Expense>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'currency',
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: 'amount',
+
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Amount' />
     ),
     cell: ({ row }) => (
       <div className='w-[100px] text-right tabular-nums'>
-        {formatCurrency(row.getValue('amount'), row.getValue('currency'))}
+        {formatCurrency(row.getValue('amount'), row.original.currency)}
       </div>
     ),
     enableSorting: true,

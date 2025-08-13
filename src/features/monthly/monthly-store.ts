@@ -3,7 +3,7 @@ import { Expense } from '~/models/expense'
 
 type DialogType = 'create' | 'update' | 'delete' | 'import'
 
-interface ExpensesStore {
+interface MonthlyStore {
   // State
   dialogOpen: DialogType | null
   currentExpense: Expense | null
@@ -14,7 +14,7 @@ interface ExpensesStore {
   reset: () => void
 }
 
-export const useExpensesStore = create<ExpensesStore>((set) => ({
+export const useMonthlyStore = create<MonthlyStore>((set) => ({
   // Initial state
   dialogOpen: null,
   currentExpense: null,

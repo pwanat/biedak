@@ -1,8 +1,7 @@
 import { Main } from '@/components/layout/main'
-import { ExpenseDialogs } from './expenses/components/expense-dialogs'
-import { IncomeCard } from './expenses/components/income-card'
-import { TasksPrimaryButtons } from './expenses/components/tasks-primary-buttons'
+import { MonthlyDialogs } from './components/monthly-dialogs'
 import Expenses from './expenses/expenses'
+import { Income } from './income/income'
 
 export default function Monthly() {
   return (
@@ -17,17 +16,14 @@ export default function Monthly() {
               Here&apos;s your monthly overview.
             </p>
           </div>
-          <TasksPrimaryButtons />
         </div>
         <div className='flex flex-col-reverse gap-6 lg:flex-row'>
           <Expenses />
-          <div className='w-160'>
-            <IncomeCard />
-          </div>
+          <Income />
         </div>
       </Main>
 
-      <ExpenseDialogs />
+      <MonthlyDialogs />
     </>
   )
 }

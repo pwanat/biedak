@@ -2,15 +2,15 @@ import { useMutation } from '@tanstack/react-query'
 import { deleteExpenseMutationOptions } from '~/queries/expenses'
 import { showSubmittedData } from '@/utils/show-submitted-data'
 import { ConfirmDialog } from '@/components/confirm-dialog'
-import { useExpensesStore } from '../../expenses-store'
-import { ExpenseMutateDrawer } from './expense-mutate-drawer'
-import { TasksImportDialog } from './tasks-import-dialog'
+import { useMonthlyStore } from '../monthly-store'
+import { ExpenseMutateDrawer } from '../expenses/components/expense-mutate-drawer'
+import { TasksImportDialog } from '../expenses/components/tasks-import-dialog'
 
-export function ExpenseDialogs() {
-  const dialogOpen = useExpensesStore((state) => state.dialogOpen)
-  const currentExpense = useExpensesStore((state) => state.currentExpense)
-  const setCurrentExpense = useExpensesStore((state) => state.setCurrentExpense)
-  const setDialogOpen = useExpensesStore((state) => state.setDialogOpen)
+export function MonthlyDialogs() {
+  const dialogOpen = useMonthlyStore((state) => state.dialogOpen)
+  const currentExpense = useMonthlyStore((state) => state.currentExpense)
+  const setCurrentExpense = useMonthlyStore((state) => state.setCurrentExpense)
+  const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
 
   const { mutate: deleteExpense } = useMutation(deleteExpenseMutationOptions())
 

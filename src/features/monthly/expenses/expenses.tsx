@@ -1,28 +1,125 @@
+import * as React from 'react'
 import { useSuspenseQuery } from '@tanstack/react-query'
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { Expense } from '~/models/expense'
 import { expensesQueryOptions } from '~/queries/expenses'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { columns } from './components/columns'
-import { DataTable } from './components/data-table'
-import { ExpenseDialogs } from './components/expense-dialogs'
-import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
+import { DataTablePagination } from './components/data-table-pagination'
+import { DataTableToolbar } from './components/data-table-toolbar'
 
-// import { expensesQueryOptions } from '@/api/expenses'
+interface DataTableProps<TData extends Expense, TValue> {
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+}
 
 export default function Expenses() {
-  const { data: expenses } = useSuspenseQuery(expensesQueryOptions())
-  console.log('🚀 ~ Monthly ~ expensesQuery:', expenses)
-  // const expensesQuery = useQuery(expensesQueryOptions())
+  const { data } = useSuspenseQuery(expensesQueryOptions())
 
-  // const expenses = expensesQuery.data || []
-  // console.log('🚀 ~ Monthly ~ expensesQuery:', expenses)
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
+  const [sorting, setSorting] = React.useState<SortingState>([])
+
+  const table = useReactTable({
+    data,
+    columns,
+    state: {
+      sorting,
+      columnVisibility,
+      rowSelection,
+      columnFilters,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+  })
 
   return (
-    <>
-      <div className='-mx-4 flex-1 overflow-auto px-4 py-1'>
-        <TasksPrimaryButtons />
-        <DataTable data={expenses} columns={columns} />
+    <div className='grow space-y-4'>
+      <DataTableToolbar table={table} />
+      <div className='overflow-hidden rounded-md border'>
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id} colSpan={header.colSpan}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className='h-24 text-center'
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
-
-      <ExpenseDialogs />
-    </>
+      <DataTablePagination table={table} />
+    </div>
   )
 }
