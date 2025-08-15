@@ -2,7 +2,14 @@ import { create } from 'zustand'
 import { Expense } from '~/models/expense'
 import { Income } from '~/models/income'
 
-type DialogType = 'create' | 'update' | 'delete' | 'import' | 'income-create' | 'income-update'
+type DialogType =
+  | 'expense-create'
+  | 'expense-update'
+  | 'expense-delete'
+  | 'import'
+  | 'income-create'
+  | 'income-update'
+  | 'income-delete'
 
 interface MonthlyStore {
   // State
@@ -27,5 +34,6 @@ export const useMonthlyStore = create<MonthlyStore>((set) => ({
   setDialogOpen: (type) => set({ dialogOpen: type }),
   setCurrentExpense: (expense) => set({ currentExpense: expense }),
   setCurrentIncome: (income) => set({ currentIncome: income }),
-  reset: () => set({ dialogOpen: null, currentExpense: null, currentIncome: null }),
+  reset: () =>
+    set({ dialogOpen: null, currentExpense: null, currentIncome: null }),
 }))

@@ -1,34 +1,29 @@
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 import { Row } from '@tanstack/react-table'
 import { IconTrash } from '@tabler/icons-react'
-import { Expense } from '~/models/expense'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { labels } from '../../data/data'
 import { useMonthlyStore } from '../../monthly-store'
+import { Income } from '~/models/income'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
-export function DataTableRowActions<TData extends Expense>({
+export function DataTableRowActions<TData extends Income>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const expense = row.original
+  const income = row.original
+  console.log("🚀 ~ DataTableRowActions ~ income:", income)
   const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
-  const setCurrentExpense = useMonthlyStore((state) => state.setCurrentExpense)
+  const setCurrentIncome = useMonthlyStore((state) => state.setCurrentIncome)
 
   return (
     <DropdownMenu modal={false}>
@@ -44,32 +39,17 @@ export function DataTableRowActions<TData extends Expense>({
       <DropdownMenuContent align='end' className='w-[160px]'>
         <DropdownMenuItem
           onClick={() => {
-            setCurrentExpense(expense)
-            setDialogOpen('expense-update')
+            setCurrentIncome(income)
+            setDialogOpen('income-update')
           }}
         >
           Edit
         </DropdownMenuItem>
-        <DropdownMenuItem disabled>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem disabled>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-          <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={expense.name}>
-              {labels.map((label) => (
-                <DropdownMenuRadioItem key={label.value} value={label.value}>
-                  {label.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuSubContent>
-        </DropdownMenuSub>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            setCurrentExpense(expense)
-            setDialogOpen('expense-delete')
+            setCurrentIncome(income)
+            setDialogOpen('delete')
           }}
         >
           Delete

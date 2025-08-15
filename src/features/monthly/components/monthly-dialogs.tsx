@@ -6,6 +6,7 @@ import { useMonthlyStore } from '../monthly-store'
 import { ExpenseMutateDrawer } from '../expenses/components/expense-mutate-drawer'
 import { TasksImportDialog } from '../expenses/components/tasks-import-dialog'
 import { IncomeMutateDrawer } from '../income/components/income-mutate-drawer'
+import { deleteIncomeMutationOptions } from '~/queries/income'
 
 export function MonthlyDialogs() {
   const dialogOpen = useMonthlyStore((state) => state.dialogOpen)
@@ -15,10 +16,11 @@ export function MonthlyDialogs() {
   const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
 
   const { mutate: deleteExpense } = useMutation(deleteExpenseMutationOptions())
+  const { mutate: deleteIncome } = useMutation(deleteIncomeMutationOptions())
 
   return (
     <>
-      <ExpenseMutateDrawer key='task-create' open={dialogOpen === 'create'} />
+      <ExpenseMutateDrawer key='expense-create' open={dialogOpen === 'create'} />
       <IncomeMutateDrawer key='income-create' open={dialogOpen === 'income-create'} />
 
       <TasksImportDialog
@@ -31,19 +33,13 @@ export function MonthlyDialogs() {
         <>
           <ExpenseMutateDrawer
             key={`task-update-${currentExpense.id}`}
-            open={dialogOpen === 'update'}
+            open={dialogOpen === 'expense-update'}
             currentRow={currentExpense}
           />
-          <IncomeMutateDrawer
-            key={`task-update-${currentExpense.id}`}
-            open={dialogOpen === 'income-update'}
-            currentRow={currentIncome}
-          />
-
           <ConfirmDialog
             key='task-delete'
             destructive
-            open={dialogOpen === 'delete'}
+            open={dialogOpen === 'expense-delete'}
             onOpenChange={() => {
               setDialogOpen(null)
             }}
@@ -64,6 +60,45 @@ export function MonthlyDialogs() {
               <>
                 You are about to delete an expense with the ID{' '}
                 <strong>{currentExpense.id}</strong>. <br />
+                This action cannot be undone.
+              </>
+            }
+            confirmText='Delete'
+          />
+        </>
+      )}
+      {currentIncome && (
+        <>
+          <IncomeMutateDrawer
+            key={`income-update-${currentIncome.id}`}
+            open={dialogOpen === 'income-update'}
+            currentRow={currentIncome}
+          />
+
+          <ConfirmDialog
+            key='income-delete'
+            destructive
+            open={dialogOpen === 'income-delete'}
+            onOpenChange={() => {
+              setDialogOpen(null)
+            }}
+            handleConfirm={() => {
+              setDialogOpen(null)
+              deleteIncome(currentIncome.id)
+              setTimeout(() => {
+                setCurrentExpense(null)
+              }, 500)
+              showSubmittedData(
+                currentIncome,
+                'The following income has been deleted:'
+              )
+            }}
+            className='max-w-md'
+            title={`Delete this income: ${currentIncome.id} ?`}
+            desc={
+              <>
+                You are about to delete an income with the ID{' '}
+                <strong>{currentIncome.id}</strong>. <br />
                 This action cannot be undone.
               </>
             }

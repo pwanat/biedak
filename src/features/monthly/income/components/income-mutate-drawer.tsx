@@ -35,7 +35,7 @@ import { useMonthlyStore } from '../../monthly-store'
 
 interface Props {
   open: boolean
-  currentRow?: Income
+  currentRow?: Income | null
 }
 
 const formSchema = z.object({
@@ -53,6 +53,7 @@ const formSchema = z.object({
 export type IncomeForm = z.infer<typeof formSchema>
 
 export function IncomeMutateDrawer({ open, currentRow }: Props) {
+  console.log('🚀 ~ IncomeMutateDrawer ~ currentRow:', currentRow)
   const setDialogOpen = useMonthlyStore((state) => state.setDialogOpen)
   const isUpdate = !!currentRow
 
@@ -64,7 +65,7 @@ export function IncomeMutateDrawer({ open, currentRow }: Props) {
     defaultValues: {
       name: currentRow?.name || '',
       description: currentRow?.description || '',
-      amount: currentRow?.amount || 0,
+      amount: currentRow?.amount ? currentRow.amount / 100 : 0,
       occurredOn: currentRow?.occurredOn || new Date(),
     },
   })
